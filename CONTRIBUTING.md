@@ -11,7 +11,9 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 * Add tests for it. This is important so we don't break it in a future version unintentionally.
 * Send a pull request. Bonus points for topic branches.
 
-Pull requests for bug fixes must be based on the current stable branch whereas pull requests for new features must be based on `master`.
+Please make sure that you have [set up your user name and email address](http://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup) for use with Git. Strings such as `silly nick name <root@localhost>` look really stupid in the commit history of a project.
+
+Pull requests for bug fixes must be based on the current stable branch whereas pull requests for new features must be based on the `master` branch.
 
 We are trying to keep backwards compatibility breaks in PHPUnit to an absolute minimum. Please take this into account when proposing changes.
 
@@ -21,7 +23,7 @@ Due to time constraints, we are not always able to respond as quickly as we woul
 
 This project comes with a configuration file for [php-cs-fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) (`.php_cs`) that you can use to (re)format your sourcecode for compliance with this project's coding guidelines:
 
-```
+```bash
 $ wget http://get.sensiolabs.org/php-cs-fixer.phar
 
 $ php php-cs-fixer.phar fix
@@ -31,7 +33,7 @@ $ php php-cs-fixer.phar fix
 
 The following commands can be used to perform the initial checkout of PHPUnit:
 
-```
+```bash
 $ git clone git://github.com/sebastianbergmann/phpunit.git
 
 $ cd phpunit
@@ -39,7 +41,7 @@ $ cd phpunit
 
 Retrieve PHPUnit's dependencies using [Composer](http://getcomposer.org/):
 
-```
+```bash
 $ wget http://getcomposer.org/composer.phar
 
 $ php composer.phar install
@@ -47,7 +49,7 @@ $ php composer.phar install
 
 The `phpunit` script can be used to invoke the PHPUnit test runner:
 
-```
+```bash
 $ ./phpunit --version
 ```
 
@@ -59,7 +61,6 @@ Please use the most specific issue tracker to search for existing tickets and to
 * [Code Coverage](https://github.com/sebastianbergmann/php-code-coverage/issues)
 * [Stub and Mock Objects](https://github.com/sebastianbergmann/phpunit-mock-objects/issues)
 * [DbUnit](https://github.com/sebastianbergmann/dbunit/issues)
-* [PHPUnit_Selenium](https://github.com/sebastianbergmann/phpunit-selenium/issues)
 * [Documentation](https://github.com/sebastianbergmann/phpunit-documentation/issues)
 * [Website](https://github.com/sebastianbergmann/phpunit-website/issues)
 

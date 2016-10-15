@@ -13,6 +13,9 @@
  */
 class Framework_AssertTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string
+     */
     private $filesDirectory;
 
     protected function setUp()
@@ -167,7 +170,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      * @covers PHPUnit_Framework_Assert::assertArraySubset
      * @covers PHPUnit_Framework_Constraint_ArraySubset
      */
-    public function testassertArraySubset()
+    public function testAssertArraySubset()
     {
         $array = [
             'a' => 'item a',
@@ -197,7 +200,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      * @covers PHPUnit_Framework_Assert::assertArraySubset
      * @covers PHPUnit_Framework_Constraint_ArraySubset
      */
-    public function testassertArraySubsetWithDeepNestedArrays()
+    public function testAssertArraySubsetWithDeepNestedArrays()
     {
         $array = [
             'path' => [
@@ -227,7 +230,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      * @covers PHPUnit_Framework_Assert::assertArraySubset
      * @covers PHPUnit_Framework_Constraint_ArraySubset
      */
-    public function testassertArraySubsetWithNoStrictCheckAndObjects()
+    public function testAssertArraySubsetWithNoStrictCheckAndObjects()
     {
         $obj       = new \stdClass;
         $reference = &$obj;
@@ -241,7 +244,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      * @covers PHPUnit_Framework_Assert::assertArraySubset
      * @covers PHPUnit_Framework_Constraint_ArraySubset
      */
-    public function testassertArraySubsetWithStrictCheckAndObjects()
+    public function testAssertArraySubsetWithStrictCheckAndObjects()
     {
         $obj       = new \stdClass;
         $reference = &$obj;
@@ -265,11 +268,14 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      * @expectedExceptionMessage array or ArrayAccess
      * @dataProvider assertArraySubsetInvalidArgumentProvider
      */
-    public function testassertArraySubsetRaisesExceptionForInvalidArguments($partial, $subject)
+    public function testAssertArraySubsetRaisesExceptionForInvalidArguments($partial, $subject)
     {
         $this->assertArraySubset($partial, $subject);
     }
 
+    /**
+     * @return array
+     */
     public function assertArraySubsetInvalidArgumentProvider()
     {
         return [
@@ -627,7 +633,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertArrayContainsOnlyStdClass()
     {
-        $this->assertContainsOnly('StdClass', [new StdClass]);
+        $this->assertContainsOnly('StdClass', [new stdClass]);
 
         try {
             $this->assertContainsOnly('StdClass', ['StdClass']);
@@ -646,21 +652,12 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
         $this->assertNotContainsOnly('StdClass', ['StdClass']);
 
         try {
-            $this->assertNotContainsOnly('StdClass', [new StdClass]);
+            $this->assertNotContainsOnly('StdClass', [new stdClass]);
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             return;
         }
 
         $this->fail();
-    }
-
-    protected function createDOMDocument($content)
-    {
-        $document                     = new DOMDocument;
-        $document->preserveWhiteSpace = false;
-        $document->loadXML($content);
-
-        return $document;
     }
 
     protected function sameValues()
@@ -741,9 +738,9 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
             [NAN, NAN],
             // arrays
             [[], [0 => 1]],
-            [[0 => 1], []],
-            [[0 => null], []],
-            [[0 => 1, 1 => 2], [0 => 1, 1 => 3]],
+            [[0     => 1], []],
+            [[0     => null], []],
+            [[0     => 1, 1 => 2], [0     => 1, 1 => 3]],
             [['a', 'b' => [1, 2]], ['a', 'b' => [2, 1]]],
             // objects
             [new SampleClass(4, 8, 15), new SampleClass(16, 23, 42)],
@@ -756,24 +753,24 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
             [$storage1, $storage2],
             // DOMDocument
             [
-                $this->createDOMDocument('<root></root>'),
-                $this->createDOMDocument('<bar/>'),
+                PHPUnit_Util_XML::load('<root></root>'),
+                PHPUnit_Util_XML::load('<bar/>'),
             ],
             [
-                $this->createDOMDocument('<foo attr1="bar"/>'),
-                $this->createDOMDocument('<foo attr1="foobar"/>'),
+                PHPUnit_Util_XML::load('<foo attr1="bar"/>'),
+                PHPUnit_Util_XML::load('<foo attr1="foobar"/>'),
             ],
             [
-                $this->createDOMDocument('<foo> bar </foo>'),
-                $this->createDOMDocument('<foo />'),
+                PHPUnit_Util_XML::load('<foo> bar </foo>'),
+                PHPUnit_Util_XML::load('<foo />'),
             ],
             [
-                $this->createDOMDocument('<foo xmlns="urn:myns:bar"/>'),
-                $this->createDOMDocument('<foo xmlns="urn:notmyns:bar"/>'),
+                PHPUnit_Util_XML::load('<foo xmlns="urn:myns:bar"/>'),
+                PHPUnit_Util_XML::load('<foo xmlns="urn:notmyns:bar"/>'),
             ],
             [
-                $this->createDOMDocument('<foo> bar </foo>'),
-                $this->createDOMDocument('<foo> bir </foo>'),
+                PHPUnit_Util_XML::load('<foo> bar </foo>'),
+                PHPUnit_Util_XML::load('<foo> bir </foo>'),
             ],
             [
                 new DateTime('2013-03-29 04:13:35', new DateTimeZone('America/New_York')),
@@ -824,7 +821,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
             // different types
             [new SampleClass(4, 8, 15), false],
             [false, new SampleClass(4, 8, 15)],
-            [[0 => 1, 1 => 2], false],
+            [[0        => 1, 1 => 2], false],
             [false, [0 => 1, 1 => 2]],
             [[], new stdClass],
             [new stdClass, []],
@@ -876,20 +873,20 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
             [$storage1, $storage2],
             // DOMDocument
             [
-                $this->createDOMDocument('<root></root>'),
-                $this->createDOMDocument('<root/>'),
+                PHPUnit_Util_XML::load('<root></root>'),
+                PHPUnit_Util_XML::load('<root/>'),
             ],
             [
-                $this->createDOMDocument('<root attr="bar"></root>'),
-                $this->createDOMDocument('<root attr="bar"/>'),
+                PHPUnit_Util_XML::load('<root attr="bar"></root>'),
+                PHPUnit_Util_XML::load('<root attr="bar"/>'),
             ],
             [
-                $this->createDOMDocument('<root><foo attr="bar"></foo></root>'),
-                $this->createDOMDocument('<root><foo attr="bar"/></root>'),
+                PHPUnit_Util_XML::load('<root><foo attr="bar"></foo></root>'),
+                PHPUnit_Util_XML::load('<root><foo attr="bar"/></root>'),
             ],
             [
-                $this->createDOMDocument("<root>\n  <child/>\n</root>"),
-                $this->createDOMDocument('<root><child/></root>'),
+                PHPUnit_Util_XML::load("<root>\n  <child/>\n</root>"),
+                PHPUnit_Util_XML::load('<root><child/></root>'),
             ],
             [
                 new DateTime('2013-03-29 04:13:35', new DateTimeZone('America/New_York')),
@@ -1173,6 +1170,39 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException PHPUnit_Framework_Exception
+     * @covers            PHPUnit_Framework_Assert::assertXmlStringEqualsXmlString
+     * @ticket            1860
+     */
+    public function testAssertXmlStringEqualsXmlString2()
+    {
+        $this->assertXmlStringEqualsXmlString('<a></b>', '<c></d>');
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertXmlStringEqualsXmlString
+     * @ticket 1860
+     */
+    public function testAssertXmlStringEqualsXmlString3()
+    {
+        $expected = <<<XML
+<?xml version="1.0"?>
+<root>
+    <node />
+</root>
+XML;
+
+        $actual = <<<XML
+<?xml version="1.0"?>
+<root>
+<node />
+</root>
+XML;
+
+        $this->assertXmlStringEqualsXmlString($expected, $actual);
+    }
+
+    /**
      * @covers PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString
      */
     public function testAssertXmlStringNotEqualsXmlString()
@@ -1311,6 +1341,220 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers            PHPUnit_Framework_Assert::assertIsReadable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertIsReadableThrowsException()
+    {
+        $this->assertIsReadable(null);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertIsReadable
+     */
+    public function testAssertIsReadable()
+    {
+        $this->assertIsReadable(__FILE__);
+
+        try {
+            $this->assertIsReadable(__DIR__ . DIRECTORY_SEPARATOR . 'NotExisting');
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            return;
+        }
+
+        $this->fail();
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertNotIsReadable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertNotIsReadableThrowsException()
+    {
+        $this->assertNotIsReadable(null);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertNotIsReadable
+     */
+    public function testAssertNotIsReadable()
+    {
+        try {
+            $this->assertNotIsReadable(__FILE__);
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            return;
+        }
+
+        $this->fail();
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertIsWritable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertIsWritableThrowsException()
+    {
+        $this->assertIsWritable(null);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertIsWritable
+     */
+    public function testAssertIsWritable()
+    {
+        $this->assertIsWritable(__FILE__);
+
+        try {
+            $this->assertIsWritable(__DIR__ . DIRECTORY_SEPARATOR . 'NotExisting');
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            return;
+        }
+
+        $this->fail();
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertNotIsWritable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertNotIsWritableThrowsException()
+    {
+        $this->assertNotIsWritable(null);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertNotIsWritable
+     */
+    public function testAssertNotIsWritable()
+    {
+        try {
+            $this->assertNotIsWritable(__FILE__);
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            return;
+        }
+
+        $this->fail();
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertDirectoryExists
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertDirectoryExistsThrowsException()
+    {
+        $this->assertDirectoryExists(null);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertDirectoryExists
+     */
+    public function testAssertDirectoryExists()
+    {
+        $this->assertDirectoryExists(__DIR__);
+
+        try {
+            $this->assertDirectoryExists(__DIR__ . DIRECTORY_SEPARATOR . 'NotExisting');
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            return;
+        }
+
+        $this->fail();
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertDirectoryNotExists
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertDirectoryNotExistsThrowsException()
+    {
+        $this->assertDirectoryNotExists(null);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertDirectoryNotExists
+     */
+    public function testAssertDirectoryNotExists()
+    {
+        $this->assertDirectoryNotExists(__DIR__ . DIRECTORY_SEPARATOR . 'NotExisting');
+
+        try {
+            $this->assertDirectoryNotExists(__DIR__);
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            return;
+        }
+
+        $this->fail();
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertDirectoryIsReadable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertDirectoryIsReadableThrowsException()
+    {
+        $this->assertDirectoryIsReadable(null);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertDirectoryIsReadable
+     */
+    public function testAssertDirectoryIsReadable()
+    {
+        $this->assertDirectoryIsReadable(__DIR__);
+
+        try {
+            $this->assertDirectoryIsReadable(__DIR__ . DIRECTORY_SEPARATOR . 'NotExisting');
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            return;
+        }
+
+        $this->fail();
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertDirectoryNotIsReadable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertDirectoryNotIsReadableThrowsException()
+    {
+        $this->assertDirectoryNotIsReadable(null);
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertDirectoryIsWritable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertDirectoryIsWritableThrowsException()
+    {
+        $this->assertDirectoryIsWritable(null);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertDirectoryIsWritable
+     */
+    public function testAssertDirectoryIsWritable()
+    {
+        $this->assertDirectoryIsWritable(__DIR__);
+
+        try {
+            $this->assertDirectoryIsWritable(__DIR__ . DIRECTORY_SEPARATOR . 'NotExisting');
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            return;
+        }
+
+        $this->fail();
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertDirectoryNotIsWritable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertDirectoryNotIsWritableThrowsException()
+    {
+        $this->assertDirectoryNotIsWritable(null);
+    }
+
+    /**
      * @covers            PHPUnit_Framework_Assert::assertFileExists
      * @expectedException PHPUnit_Framework_Exception
      */
@@ -1358,6 +1602,74 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
         }
 
         $this->fail();
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertFileIsReadable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertFileIsReadableThrowsException()
+    {
+        $this->assertFileIsReadable(null);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertFileIsReadable
+     */
+    public function testAssertFileIsReadable()
+    {
+        $this->assertFileIsReadable(__FILE__);
+
+        try {
+            $this->assertFileIsReadable(__DIR__ . DIRECTORY_SEPARATOR . 'NotExisting');
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            return;
+        }
+
+        $this->fail();
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertFileNotIsReadable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertFileNotIsReadableThrowsException()
+    {
+        $this->assertFileNotIsReadable(null);
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertFileIsWritable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertFileIsWritableThrowsException()
+    {
+        $this->assertFileIsWritable(null);
+    }
+
+    /**
+     * @covers PHPUnit_Framework_Assert::assertFileIsWritable
+     */
+    public function testAssertFileIsWritable()
+    {
+        $this->assertFileIsWritable(__FILE__);
+
+        try {
+            $this->assertFileIsWritable(__DIR__ . DIRECTORY_SEPARATOR . 'NotExisting');
+        } catch (PHPUnit_Framework_AssertionFailedError $e) {
+            return;
+        }
+
+        $this->fail();
+    }
+
+    /**
+     * @covers            PHPUnit_Framework_Assert::assertFileNotIsWritable
+     * @expectedException PHPUnit_Framework_Exception
+     */
+    public function testAssertFileNotIsWritableThrowsException()
+    {
+        $this->assertFileNotIsWritable(null);
     }
 
     /**
@@ -2709,7 +3021,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testObjectHasOnTheFlyAttribute()
     {
-        $obj      = new StdClass;
+        $obj      = new stdClass;
         $obj->foo = 'bar';
 
         $this->assertObjectHasAttribute('foo', $obj);
@@ -2728,7 +3040,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testObjectNotHasOnTheFlyAttribute()
     {
-        $obj      = new StdClass;
+        $obj      = new stdClass;
         $obj->foo = 'bar';
 
         $this->assertObjectNotHasAttribute('bar', $obj);
@@ -2863,6 +3175,8 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
     /**
      * @covers PHPUnit_Framework_Assert::assertThat
      * @covers PHPUnit_Framework_Assert::anything
+     *
+     * @doesNotPerformAssertions
      */
     public function testAssertThatAnything()
     {
@@ -2900,6 +3214,8 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      * @covers PHPUnit_Framework_Assert::assertThat
      * @covers PHPUnit_Framework_Assert::anything
      * @covers PHPUnit_Framework_Assert::logicalAnd
+     *
+     * @doesNotPerformAssertions
      */
     public function testAssertThatAnythingAndAnything()
     {
@@ -2915,6 +3231,8 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      * @covers PHPUnit_Framework_Assert::assertThat
      * @covers PHPUnit_Framework_Assert::anything
      * @covers PHPUnit_Framework_Assert::logicalOr
+     *
+     * @doesNotPerformAssertions
      */
     public function testAssertThatAnythingOrAnything()
     {
@@ -2931,6 +3249,8 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      * @covers PHPUnit_Framework_Assert::anything
      * @covers PHPUnit_Framework_Assert::logicalNot
      * @covers PHPUnit_Framework_Assert::logicalXor
+     *
+     * @doesNotPerformAssertions
      */
     public function testAssertThatAnythingXorNotAnything()
     {
@@ -3038,7 +3358,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertThatIdenticalTo()
     {
-        $value      = new StdClass;
+        $value      = new stdClass;
         $constraint = $this->identicalTo($value);
 
         $this->assertThat($value, $constraint);
@@ -3050,7 +3370,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertThatIsInstanceOf()
     {
-        $this->assertThat(new StdClass, $this->isInstanceOf('StdClass'));
+        $this->assertThat(new stdClass, $this->isInstanceOf('StdClass'));
     }
 
     /**
@@ -3131,8 +3451,10 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertThatCallback()
     {
-        $this->assertThat(null, $this->callback(function ($other) { return true;
-        }));
+        $this->assertThat(
+            null,
+            $this->callback(function ($other) { return true; })
+        );
     }
 
     /**
@@ -3474,7 +3796,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertAttributeEmpty()
     {
-        $o    = new StdClass;
+        $o    = new stdClass;
         $o->a = [];
 
         $this->assertAttributeEmpty('a', $o);
@@ -3494,7 +3816,7 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertAttributeNotEmpty()
     {
-        $o    = new StdClass;
+        $o    = new stdClass;
         $o->a = ['b'];
 
         $this->assertAttributeNotEmpty('a', $o);
@@ -4133,6 +4455,9 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
         $this->fail();
     }
 
+    /**
+     * @return array
+     */
     public static function validInvalidJsonDataprovider()
     {
         return [
